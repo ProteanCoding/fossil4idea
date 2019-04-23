@@ -170,6 +170,11 @@ public class LocalUtil {
         myClb.processChange(createChange(myProject, file, FileStatus.MERGED_WITH_CONFLICTS), FossilVcs.getVcsKey());
         return;
       }
+      if ("RENAMED".equals(typeName)) {
+        Change change = new Change(null, createAfter(file, FileStatus.MODIFIED));
+        myClb.processChange(change, FossilVcs.getVcsKey());
+        return;
+      }
       if (ourWithDiffTypes.contains(typeName)) {
         myPathsForDiff.add(s);
       }
