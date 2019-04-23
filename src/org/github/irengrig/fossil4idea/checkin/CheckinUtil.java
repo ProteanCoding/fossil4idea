@@ -159,6 +159,7 @@ public class CheckinUtil {
         // maybe helps someday
         command.addAnswerYes("Commit anyhow (a=all/c=convert/y/N)?");
         command.addAnswerYes("continue in spite of time skew (y/N)?");
+        command.addAnswerYes("empty check-in comment.  continue (y/N)?");
         //continue in spite of sync failure (y/N)?
 
         command.addBreakSequence("fossil knows nothing about");
