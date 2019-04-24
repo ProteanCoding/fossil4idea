@@ -30,6 +30,9 @@ public class CommitWorker {
 
   public FossilRevisionNumber getBaseRevisionNumber(final File file) throws VcsException {
     final String baseRevision = getBaseRevision(file);
+    if (baseRevision == null) {
+      return null;
+    }
     final ArtifactInfo artifactInfo = getArtifactInfo(baseRevision, file);
     return new FossilRevisionNumber(baseRevision, artifactInfo.getDate());
   }
@@ -41,6 +44,9 @@ public class CommitWorker {
 
   public FossilFileRevision getBaseFileRevision(final File file) throws VcsException {
     final String baseRevision = getBaseRevision(file);
+    if (baseRevision == null) {
+      return null;
+    }
     final ArtifactInfo artifactInfo = getArtifactInfo(baseRevision, file);
     return new FossilFileRevision(myProject, LocalUtil.createFilePath(file), new FossilRevisionNumber(baseRevision, artifactInfo.getDate()),
         artifactInfo.getUser(), artifactInfo.getComment());
@@ -56,9 +62,12 @@ public class CommitWorker {
     if (lines.length == 0) {
       throw new FossilException("Can not find base revision for " + file.getPath());
     }
+    if (lines.length == 1) {
+      // no base revision
+      return null;
+    }
     if (lines[0].startsWith("History of")) {
       // ok
-      if (lines.length < 2) throw new FossilException("Can not find base revision for " + file.getPath() + "\n:" + result);
       final int idx1 = lines[1].indexOf('[');
       final int idx2 = lines[1].indexOf(']');
       if (idx1 == -1 || idx2 == -1 || idx1 >= idx2) {
