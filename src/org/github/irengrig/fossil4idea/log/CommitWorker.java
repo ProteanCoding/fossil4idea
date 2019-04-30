@@ -53,6 +53,12 @@ public class CommitWorker {
   }
 
   public String getBaseRevision(final File file) throws VcsException {
+    try {
+      // The base library may request a MoveRename on another thread, we need to make sure that one completes first
+      // TODO: proper synchronization with MoveWorker
+      Thread.sleep(100);
+    } catch (InterruptedException e) { }
+
     final FossilSimpleCommand command = new FossilSimpleCommand(myProject, MoveWorker.findParent(file), FCommandName.finfo);
     command.addParameters("--limit", "1");
     command.addParameters(file.getPath());
